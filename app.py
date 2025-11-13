@@ -7,7 +7,8 @@ import altair as alt
 
 # streamlit setup:
 st.set_page_config(page_title="Boston Crime Insights", layout="wide")
-st.title("🚔 Boston Crime Dashboard — 2023 to Present")
+st.title("Boston Crime Dashboard")
+st.subheader("(from 2023 to present)")
 
 # Boston dataset API (updated daily):
 RESOURCE_ID = "b973d8cb-eeb2-4e7e-99da-c92938efc9c0"
@@ -63,6 +64,7 @@ col2.metric("Incidents This Month", f"{len(df_f[df_f['MONTH'] == datetime.now().
 col3.metric("Shooting Incidents", df_f["SHOOTING"].sum())
 col4.metric("Unique Districts", df_f["DISTRICT"].nunique())
 
+# st.write(df.columns.tolist()) # for debugging
 
 # time series - crime volume:
 st.subheader("Crime Volume Over Time")
@@ -107,40 +109,58 @@ st.altair_chart(heatmap, use_container_width=True)
 
 
 # top offenses (bar chart):
-st.subheader("Top 20 Crimes")
+st.subheader("Top 20 Crimes (by OFFENSE_DESCRIPTION)")
 
 top_crimes = (
     df_f["OFFENSE_DESCRIPTION"]
     .value_counts()
+    .rename_axis("Crime")
+    .reset_index(name="Count")
     .head(20)
-    .reset_index()
-    .rename(columns={"index": "Crime", "OFFENSE_DESCRIPTION": "Count"})
 )
 
-bar1 = alt.Chart(top_crimes).mark_bar().encode(
-    x="Count:Q",
-    y=alt.Y("Crime:N", sort="-x")
-).properties(height=500)
+crime_chart = (
+    alt.Chart(top_crimes)
+    .mark_bar()
+    .encode(
+        y=alt.Y("Crime:N", sort="-x"),
+        x=alt.X("Count:Q"),
+        tooltip=["Crime", "Count"],
+    )
+)
 
-st.altair_chart(bar1, use_container_width=True)
+st.altair_chart(crime_chart, use_container_width=True)
+
+
 
 
 # district activity:
 st.subheader("Crime by Police District")
 
-dist = (
-    df_f["DISTRICT"]
-    .value_counts()
-    .reset_index()
-    .rename(columns={"index": "District", "DISTRICT": "Count"})
-)
+if "DISTRICT" not in df.columns:
+    st.error("Column DISTRICT not found in dataset.")
+else:
+    by_district = (
+        df["DISTRICT"]
+        .value_counts()
+        .rename_axis("District")
+        .reset_index(name="Count")
+    )
 
-bar2 = alt.Chart(dist).mark_bar().encode(
-    x="Count:Q",
-    y=alt.Y("District:N", sort="-x")
-)
 
-st.altair_chart(bar2, use_container_width=True)
+    import altair as alt
+    district_chart = (
+        alt.Chart(by_district)
+        .mark_bar()
+        .encode(
+            y=alt.Y("District:N", sort="-x"),
+            x=alt.X("Count:Q"),
+            tooltip=["District", "Count"],
+        )
+    )
+
+    st.altair_chart(district_chart, use_container_width=True)
+
 
 
 # shooting analysis:
@@ -164,5 +184,5 @@ st.altair_chart(shoot_line, use_container_width=True)
 
 
 # raw table:
-st.subheader("📄 Raw Data (Filtered)")
+st.subheader("Raw Data (Filtered)")
 st.dataframe(df_f.head(500))
