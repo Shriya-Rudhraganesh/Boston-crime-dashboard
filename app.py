@@ -131,6 +131,12 @@ if crime_filter:
 if dist_filter:
     df_f = df_f[df_f["DISTRICT"].isin(dist_filter)]
 
+# special version that ignores district filter but keeps others:
+df_f_nodist = df.copy()
+if year_filter:
+    df_f_nodist = df_f_nodist[df_f_nodist["YEAR"].isin(year_filter)]
+if crime_filter:
+    df_f_nodist = df_f_nodist[df_f_nodist["OFFENSE_DESCRIPTION"].isin(crime_filter)]
 
 # summary KPIs:
 st.subheader("Key Metrics")
@@ -237,7 +243,7 @@ if "DISTRICT" not in df.columns:
     st.error("Column DISTRICT not found in dataset.")
 else:
     by_district = (
-        df["DISTRICT"]
+        df_f_nodist["DISTRICT"]
         .value_counts()
         .rename_axis("District")
         .reset_index(name="Count")
@@ -260,10 +266,10 @@ else:
 st.subheader("Crime Map with Police Districts")
 st.info("(Uses a random sample of 20,000 points)")
 
-if "LAT" in df.columns and "LONG" in df.columns:
+if "LAT" in df_f_nodist.columns and "LONG" in df_f_nodist.columns:
         
     # downsample for performance:
-    df_map = df.sample(20000, random_state=42)
+    df_map = df_f_nodist.sample(20000, random_state=42)
 
     crime_map = (
         alt.Chart(df_map.dropna(subset=["LAT", "LONG"]))
