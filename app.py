@@ -243,11 +243,15 @@ shoot = (
     .reset_index()
 )
 
-
-shoot_line = alt.Chart(shoot).mark_line(color="red").encode(
-    x="OCCURRED_ON_DATE:T",
-    y="shootings:Q"
-).properties(height=250)
+shoot_line = (
+    alt.Chart(shoot)
+    .mark_line(color="red")
+    .encode(
+        x=alt.X("OCCURRED_ON_DATE:T", title="Date"),
+        y=alt.Y("shootings:Q", title="Number of Shootings")
+    )
+    .properties(height=250)
+)
 
 st.altair_chart(shoot_line, use_container_width=True)
 
