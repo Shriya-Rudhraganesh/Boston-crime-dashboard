@@ -220,13 +220,24 @@ st.altair_chart(crime_chart, use_container_width=True)
 st.subheader("Shooting Incidents Timeline")
 
 shoot = (
-    df_f[df_f["SHOOTING"] == 1]
-    .set_index("OCCURRED_ON_DATE")
+    df[df["SHOOTING"] == 1]  # use full dataset, not filtered by crime type
+    .copy()
+)
+
+# apply year and district filters only:
+if year_filter:
+    shoot = shoot[shoot["YEAR"].isin(year_filter)]
+if dist_filter:
+    shoot = shoot[shoot["DISTRICT"].isin(dist_filter)]
+
+shoot = (
+    shoot.set_index("OCCURRED_ON_DATE")
     .resample("W")
     .size()
     .rename("shootings")
     .reset_index()
 )
+
 
 shoot_line = alt.Chart(shoot).mark_line(color="red").encode(
     x="OCCURRED_ON_DATE:T",
