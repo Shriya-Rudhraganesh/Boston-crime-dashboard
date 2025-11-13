@@ -8,7 +8,8 @@ import altair as alt
 # streamlit setup:
 st.set_page_config(page_title="Boston Crime Insights", layout="wide")
 st.title("Boston Crime Dashboard")
-st.subheader("(from 2023 to present)")
+st.subheader("(Explore official data from 2015 to present)")
+
 
 # Boston dataset API (updated daily):
 RESOURCE_ID = "b973d8cb-eeb2-4e7e-99da-c92938efc9c0"
@@ -18,16 +19,92 @@ API_URL = f"https://data.boston.gov/api/3/action/datastore_search?resource_id={R
 # load live data (cached hourly):
 @st.cache_data(ttl=3600, show_spinner=True)
 def load_data():
-    r = requests.get(API_URL).json()
-    df = pd.DataFrame(r["result"]["records"])
-    
-    # cleaning & typing:
-    df["OCCURRED_ON_DATE"] = pd.to_datetime(df["OCCURRED_ON_DATE"], errors="coerce")
+    base_url = "https://idtjzemdsv58.objectstorage.us-ashburn-1.oci.customer-oci.com/n/idtjzemdsv58/b/boston-crime-data/o/"
+    files = [
+        "2015.csv", "2016.csv", "2017.csv", "2018.csv", "2019.csv",
+        "2020.csv", "2021.csv", "2022.csv", "2023-present.csv"
+    ]
+
+    dfs = []
+    for fname in files:
+        url = f"{base_url}{fname}"
+        try:
+            df_y = pd.read_csv(url)
+            df_y.columns = df_y.columns.str.strip().str.upper()
+            dfs.append(df_y)
+            # st.write(f"✅ Loaded {fname}")
+        except Exception as e:
+            st.warning(f"⚠️ Could not load {fname}: {e}")
+
+    if not dfs:
+        st.error("No data files could be loaded from Oracle Cloud.")
+        st.stop()
+
+    # Combine everything
+    df = pd.concat(dfs, ignore_index=True)
+
+    # Normalize date strings before parsing
+    df["OCCURRED_ON_DATE"] = (
+        df["OCCURRED_ON_DATE"]
+        .astype(str)
+        .str.replace(r"\+00(:00)?", "", regex=True)
+        .str.strip()
+    )
+    df["OCCURRED_ON_DATE"] = pd.to_datetime(df["OCCURRED_ON_DATE"], errors="coerce", infer_datetime_format=True, utc=True)
+
     df["YEAR"] = df["OCCURRED_ON_DATE"].dt.year
     df["MONTH"] = df["OCCURRED_ON_DATE"].dt.month
     df["HOUR"] = pd.to_numeric(df["HOUR"], errors="coerce")
-    df["SHOOTING"] = df["SHOOTING"].fillna("0").replace({"Y": "1"}).astype(int)
-    
+    df["YEAR"] = df["YEAR"].astype("Int64")
+
+    if "SHOOTING" in df.columns:
+        df["SHOOTING"] = (
+            df["SHOOTING"]
+            .astype(str)
+            .str.strip()
+            .replace({"Y": "1", "N": "0", "": "0", "nan": "0"})
+            .fillna("0")
+            .astype(int)
+        )
+    else:
+        df["SHOOTING"] = 0
+
+    # fetch newest live data from Boston's open API:
+    try:
+        RESOURCE_ID = "b973d8cb-eeb2-4e7e-99da-c92938efc9c0"
+        API_URL = f"https://data.boston.gov/api/3/action/datastore_search?resource_id={RESOURCE_ID}&limit=500000"
+
+        r = requests.get(API_URL).json()
+        df_live = pd.DataFrame(r["result"]["records"])
+        df_live.columns = df_live.columns.str.strip().str.upper()
+
+        df_live["OCCURRED_ON_DATE"] = pd.to_datetime(df_live["OCCURRED_ON_DATE"], errors="coerce")
+        df_live["YEAR"] = df_live["OCCURRED_ON_DATE"].dt.year
+        df_live["MONTH"] = df_live["OCCURRED_ON_DATE"].dt.month
+        df_live["HOUR"] = pd.to_numeric(df_live["HOUR"], errors="coerce")
+
+        df_live["SHOOTING"] = (
+            df_live["SHOOTING"]
+            .astype(str)
+            .str.strip()
+            .replace({"Y": "1", "N": "0", "": "0", "nan": "0"})
+            .fillna("0")
+            .astype(int)
+        )
+
+        # append only newer data:
+        latest_date = df["OCCURRED_ON_DATE"].max()
+        df_live = df_live[df_live["OCCURRED_ON_DATE"] > latest_date]
+
+        if len(df_live):
+            st.success(f"Added {len(df_live):,} new records from Boston live API")
+            df = pd.concat([df, df_live], ignore_index=True)
+        # else:
+            # st.info("No new data found in the Boston API.")
+    except Exception as e:
+        st.warning(f"Could not fetch live data: {e}")
+
+    # st.info(f"Shooting column normalized — total {df['SHOOTING'].sum():,} incidents")
     return df
 
 
@@ -87,7 +164,7 @@ st.altair_chart(line, use_container_width=True)
 
 
 # heatmap: crime by hour & day:
-st.subheader("Crime Heatmap: Hour vs Day of Week")
+st.subheader("Crime Heatmap")
 
 df_f["DAY_OF_WEEK"] = df_f["OCCURRED_ON_DATE"].dt.day_name()
 
@@ -99,7 +176,7 @@ heat = (
 
 heatmap = alt.Chart(heat).mark_rect().encode(
     x=alt.X("HOUR:O", title="Hour of Day"),
-    y=alt.Y("DAY_OF_WEEK:O", sort=[
+    y=alt.Y("DAY_OF_WEEK:O", title='Day of Week', sort=[
         "Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"
     ]),
     color=alt.Color("count:Q", scale=alt.Scale(scheme="reds"))
@@ -109,7 +186,7 @@ st.altair_chart(heatmap, use_container_width=True)
 
 
 # top offenses (bar chart):
-st.subheader("Top 20 Crimes (by OFFENSE_DESCRIPTION)")
+st.subheader("Top 20 Crimes")
 
 top_crimes = (
     df_f["OFFENSE_DESCRIPTION"]
