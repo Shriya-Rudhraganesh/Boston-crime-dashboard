@@ -162,10 +162,15 @@ ts = (
     .reset_index()
 )
 
-line = alt.Chart(ts).mark_line().encode(
-    x="OCCURRED_ON_DATE:T",
-    y="count:Q"
-).properties(height=300)
+line = (
+    alt.Chart(ts)
+    .mark_line()
+    .encode(
+        x=alt.X("OCCURRED_ON_DATE:T", title="Date"),
+        y=alt.Y("count:Q", title="Number of Incidents")
+    )
+    .properties(height=300)
+)
 
 st.altair_chart(line, use_container_width=True)
 
