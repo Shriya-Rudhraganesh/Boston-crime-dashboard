@@ -240,10 +240,10 @@ else:
 st.subheader("Crime Map with Police Districts")
 st.info("(Uses a random sample of 20,000 points)")
 
-if "LAT" in df_f.columns and "LONG" in df_f.columns:
+if "LAT" in df.columns and "LONG" in df.columns:
         
     # downsample for performance:
-    df_map = df_f.sample(20000, random_state=42)
+    df_map = df.sample(20000, random_state=42)
 
     crime_map = (
         alt.Chart(df_map.dropna(subset=["LAT", "LONG"]))
