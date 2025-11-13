@@ -323,6 +323,7 @@ st.markdown(
     **Helpful Tips:**  
     - You can filter by any combination of **Years**, **Crime Types**, and **Police Districts**!  
     - Filtering by **Police District** does **not** affect the charts *Crime by Police District* or *Crime Map with Police Districts*. These visuals always show data for **all districts**, but they still respond to **Year** and **Crime Type** filters.  
+    - Filtering by **Crime Type** does **not** affect the *Shooting Incidents Timeline* graph, but it will still respond to **Year** and **Districts** filters.
     - All other visuals (e.g., Key Metrics, Crime Volume, Heatmap, Top Crimes) will refresh automatically to match your selected filters.
     """,
     unsafe_allow_html=True,
