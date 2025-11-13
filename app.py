@@ -291,3 +291,15 @@ else:
 # raw table:
 st.subheader("Raw Data (Filtered)")
 st.dataframe(df_f.head(500))
+
+
+# note to user footer:
+st.markdown("---")
+st.markdown(
+    """
+    **Helpful Tips:**  
+    - You can filter by any combination of years, crime types, and police districts!
+    - Filtering by **Police District** does **not** affect the charts *Crime by Police District* or *Crime Map with Police Districts*. All other visuals (key metrics, trends, top crimes, etc.) will refresh to show only the data for the districts you selected in the sidebar.
+    """,
+    unsafe_allow_html=True,
+)
