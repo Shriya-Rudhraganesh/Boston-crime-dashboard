@@ -310,8 +310,10 @@ st.markdown("---")
 st.markdown(
     """
     **Helpful Tips:**  
-    - You can filter by any combination of years, crime types, and police districts!
-    - Filtering by **Police District** does **not** affect the charts *Crime by Police District* or *Crime Map with Police Districts*. All other visuals (key metrics, volume over time, heatmap, etc.) will refresh to show only the data for the districts you selected in the sidebar.
+    - You can filter by any combination of **Years**, **Crime Types**, and **Police Districts**!  
+    - Filtering by **Police District** does **not** affect the charts *Crime by Police District* or *Crime Map with Police Districts*.  
+      These visuals always show data for **all districts**, but they still respond to **Year** and **Crime Type** filters.  
+    - All other visuals (e.g., Key Metrics, Crime Volume, Heatmap, Top Crimes) will refresh automatically to match your selected filters.
     """,
     unsafe_allow_html=True,
 )
