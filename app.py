@@ -115,7 +115,7 @@ years = sorted(df["YEAR"].dropna().unique(), reverse=True)
 year_filter = st.sidebar.multiselect("Year", years, default=years)
 
 crime_types = sorted(df["OFFENSE_DESCRIPTION"].dropna().unique())
-crime_filter = st.sidebar.multiselect("Crime Types", crime_types[:40])
+crime_filter = st.sidebar.multiselect("Crime Types", crime_types[:])
 
 districts = sorted(df["DISTRICT"].dropna().unique())
 dist_filter = st.sidebar.multiselect("Police Districts", districts)
