@@ -333,6 +333,13 @@ st.dataframe(df_f.head(500))
 
 
 # download button for user-filtered data:
+MAX_DOWNLOAD_ROWS = 1000000
+
+if len(df_f) > MAX_DOWNLOAD_ROWS:
+    st.warning(f"Dataset is large ({len(df_f):,} rows). Only first {MAX_DOWNLOAD_ROWS:,} will be downloaded.")
+    data_to_download = df_f.head(MAX_DOWNLOAD_ROWS)
+else:
+    data_to_download = df_f
 
 st.download_button(
     label="Download Filtered Data (CSV)",
@@ -340,6 +347,7 @@ st.download_button(
     file_name="boston_crime_filtered.csv",
     mime="text/csv"
 )
+
 
 # note to user footer:
 st.markdown("---")
