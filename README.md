@@ -45,6 +45,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ---
 **Deployment**
+
 The app is deployed via Streamlit Cloud, which automatically runs the latest version of the code from this repository.
 Data updates occur dynamically upon user access, ensuring near real-time accuracy.
 ---
