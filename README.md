@@ -59,11 +59,11 @@ streamlit run app.py
 ```
 ---
 
-**Deployment**  
+**Deployment**
 The app is deployed via Streamlit Cloud, which automatically runs the latest version of the code from this repository.
 Data updates occur dynamically upon user access, ensuring near real-time accuracy.
----
 
+---
 **References**
 - Boston Open Data Portal – Crime Incident Reports
 - CKAN Datastore API Documentation
