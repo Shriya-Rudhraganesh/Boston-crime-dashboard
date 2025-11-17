@@ -109,6 +109,15 @@ def load_data():
 
 df = load_data()
 
+
+# display when the last data update occurred:
+last_date = df["OCCURRED_ON_DATE"].max()
+
+if pd.notnull(last_date):
+    st.caption(f"Data last updated: {last_date.strftime('%B %d, %Y')}")
+else:
+    st.caption("Data last updated: Unknown")
+
 # sidebar filters:
 st.sidebar.header("Filters")
 years = sorted(df["YEAR"].dropna().unique(), reverse=True)
@@ -321,6 +330,15 @@ else:
 # raw table:
 st.subheader("Raw Data (Filtered)")
 st.dataframe(df_f.head(500))
+
+
+# download button for user-filtered data:
+st.download_button(
+    label="Download Filtered Data (CSV)",
+    data=df_f.to_csv(index=False),
+    file_name="boston_crime_filtered.csv",
+    mime="text/csv"
+)
 
 
 # note to user footer:
