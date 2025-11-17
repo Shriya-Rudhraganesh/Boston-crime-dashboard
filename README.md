@@ -9,6 +9,7 @@ An interactive data visualization dashboard that explores over a decade of Bosto
 - Lightweight Design: Optimized for performance using Streamlit caching, allowing large-scale analysis without heavy backend infrastructure.
 
 **Overview**
+
 Boston Crime Insights integrates a full ETL + visualization pipeline:
 - Extraction: Historical CSVs (2015–present) stored on Oracle Cloud and live data from the Boston Open Data API.
 - Transformation: Automatic cleaning, normalization, and type correction of fields (dates, coordinates, and categorical labels).
@@ -17,6 +18,7 @@ Boston Crime Insights integrates a full ETL + visualization pipeline:
 This workflow enables near real-time exploration of trends in crime volume, type distribution, temporal patterns, and geographic concentration.
 
 **Dataset**
+
 Source: Boston Police Department Incident Reports
 - Records from 2015–present
 - Updated daily via the city’s open data API
