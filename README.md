@@ -36,8 +36,7 @@ Source: Boston Police Department Incident Reports
 ---
 
 **Dashboard Preview**  
-<img width="1512" height="941" alt="Screenshot 2025-11-16 at 10 23 57 PM" src="https://github.com/user-attachments/assets/0722dec4-6a5d-4232-bf36-de31c87f75a8" />
-
+<img width="1512" height="853" alt="Screenshot 2025-11-16 at 10 23 57 PM" src="https://github.com/user-attachments/assets/aa9cd916-25d5-45bb-8d82-83a2f999bb67" />
 ---
 
 **Running Locally**  
