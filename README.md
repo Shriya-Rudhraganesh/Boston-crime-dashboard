@@ -21,7 +21,7 @@ This workflow enables near real-time exploration of trends in crime volume, type
 ---
 
 **Dataset**  
-Source: Boston Police Department Incident Reports
+- Source: Boston Police Department Incident Reports
 - Records from 2015–present
 - Updated daily via the city’s open data API
 - Includes fields such as OFFENSE_DESCRIPTION, DISTRICT, YEAR, MONTH, DAY_OF_WEEK, HOUR, LAT, and LONG
