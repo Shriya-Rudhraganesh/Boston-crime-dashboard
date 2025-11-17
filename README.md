@@ -45,7 +45,7 @@ Below is a glimpse of the Boston Crime Insights dashboard, where users can filte
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/<your-username>/boston-crime-insights.git
+git clone https://github.com/<your-username>/Boston-crime-dashboard.git
 cd boston-crime-insights
 ```
 
