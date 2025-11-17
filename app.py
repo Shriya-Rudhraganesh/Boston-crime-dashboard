@@ -358,6 +358,7 @@ st.markdown(
     - Filtering by **Police District** does **not** affect the charts *Crime by Police District* or *Crime Map with Police Districts*. These visuals always show data for **all districts**, but they still respond to **Year** and **Crime Type** filters.  
     - Filtering by **Crime Type** does **not** affect the *Shooting Incidents Timeline* graph, but it will still respond to **Year** and **Districts** filters.
     - All other visuals (e.g., Key Metrics, Crime Volume, Heatmap, Top Crimes) will refresh automatically to match your selected filters.
+    - Downloads are capped at 1 million records per request.
     """,
     unsafe_allow_html=True,
 )
