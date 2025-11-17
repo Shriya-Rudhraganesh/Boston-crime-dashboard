@@ -332,7 +332,7 @@ st.subheader("Raw Data (Filtered)")
 st.dataframe(df_f.head(500))
 
 
-# download button for user-filtered data:
+# download button for user-filtered data (1 million row max):
 MAX_DOWNLOAD_ROWS = 1000000
 
 if len(df_f) > MAX_DOWNLOAD_ROWS:
