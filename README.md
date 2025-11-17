@@ -1,3 +1,5 @@
+**Boston Crime Insights**
+
 Features:
 - Dynamic filtering by Year, Crime Type, and Police District
 - Interactive graphs, charts, and map visualizations
