@@ -36,7 +36,8 @@ Source: Boston Police Department Incident Reports
 ---
 
 **Dashboard Preview**  
-(Add a screenshot here ![Dashboard Screenshot](images/dashboard.png))
+(Add a screenshot here ![Dashboard Screenshot]<img width="1512" height="941" alt="Screenshot 2025-11-16 at 10 23 57 PM" src="https://github.com/user-attachments/assets/0722dec4-6a5d-4232-bf36-de31c87f75a8" />
+
 ---
 
 **Running Locally**  
